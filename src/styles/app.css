@@ -10,7 +10,7 @@
 }
 .rg-headerIcon-cell {
   @apply text-center !important;
-  @apply bg-gray-100;
+  @apply bg-gray-100 justify-between;
 }
 .rg-switch-cell {
   @apply cell-center;
