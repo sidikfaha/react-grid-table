@@ -1,52 +1,81 @@
-import { ReactGrid, Column, Row, DefaultCellTypes } from "@silevis/reactgrid";
-import "@silevis/reactgrid/styles.css";
-import React from "react";
-import { Person } from "../core/interfaces/person.interface";
-import { HeaderIconCell, HeaderIconCellTemplate } from "./components/header.cell";
-import { HiArchive } from "react-icons/hi";
+import { ReactGrid, Row, DefaultCellTypes, CellChange } from "@silevis/reactgrid";
+import { useEffect, useState } from "react";
+import {
+  HeaderIconCell,
+} from "./components/cells/header.cell";
+import { Item, ItemSelect } from "../core/interfaces/item.interface";
+import { ItemService } from "../core/services/item.service";
+import {
+  SwitchCell,
+} from "./components/cells/switch.cell";
+import {
+  AddCell,
+} from "./components/cells/add.cell";
+import { applyChanges, cellTemplates, getColumns, getRows } from "../core/meta";
+import { UrlCell } from "./components/cells/url.cell";
+import { SelectCell } from "./components/cells/select.cell";
 
-const getPeople = (): Person[] => [
-  { ok: false, name: "Thomas", surname: "Goldman" },
-  { ok: false, name: "Susie", surname: "Quattro" },
-  { ok: false, name: "", surname: "" }
-];
-
-const getColumns = (): Column[] => [
-  { columnId: "ok", width: 150 },
-  { columnId: "name", width: 150 },
-  { columnId: "surname", width: 150 }
-];
-
-const headerRow: Row<DefaultCellTypes | HeaderIconCell> = {
-  rowId: "header",
-  cells: [
-    { type: "checkbox", checked: false },
-    { type: "headerIcon", text: "Name", icon: <HiArchive /> },
-    { type: "headerIcon", text: "Surname", icon: <HiArchive /> }
-  ]
-};
-
-const getRows = (people: Person[]): Row<DefaultCellTypes | HeaderIconCell>[] => [
-  headerRow,
-  ...people.map<Row>((person, idx) => ({
-    rowId: idx,
-    cells: [
-      { type: "checkbox", checked: person.ok },
-      { type: "text", text: person.name, nonEditable: true },
-      { type: "text", text: person.surname }
-    ]
-  }))
-];
 
 export default function App() {
-  const [people] = React.useState<Person[]>(getPeople());
+  const footer: Row<AddCell | DefaultCellTypes> = {
+    rowId: "footer",
+    height: 45,
+    cells: [
+      { type: "add", text: "", onClick: () => addItem() },
+      { type: "text", text: "" },
+      { type: "text", text: "" },
+      { type: "text", text: "" },
+      { type: "text", text: "" },
+    ],
+  };
+  const [items, setItems] = useState<Item[]>([]);
+  const [rows, setRows] = useState<Row<AddCell | DefaultCellTypes | HeaderIconCell | SwitchCell | UrlCell | SelectCell>[]>([
+    ...getRows(items),
+    footer
+  ]);
 
-  const rows = getRows(people);
+  useEffect(() => {
+    setItems(ItemService.getAll());
+  }, []);
+
+  useEffect(() => {
+    setRows([
+      ...getRows(items),
+      footer
+    ]);
+  }, [items]);
+
+  const addItem = () => {
+    const newItem = {
+      id: items[items.length -1].id + 1,
+      bool: 'yes',
+      select: ItemSelect.high,
+      text: '',
+      url: '',
+    } as Item;
+    setItems([...items, newItem]);
+  }
+
   const columns = getColumns();
 
-  return <ReactGrid
-    customCellTemplates={{ headerIcon: new HeaderIconCellTemplate() }}
-    rows={rows}
-    columns={columns}
-  />;
+  const handleChanges = (changes: CellChange[]) => { 
+    setItems((oldItems) => {
+      return applyChanges(changes, oldItems)
+    }); 
+  }; 
+
+  return (
+    <>
+      <div>
+        <ReactGrid
+          customCellTemplates={cellTemplates}
+          rows={rows}
+          columns={columns}
+          enableRangeSelection
+          enableFillHandle
+          onCellsChanged={handleChanges}
+        />
+      </div>
+    </>
+  );
 }

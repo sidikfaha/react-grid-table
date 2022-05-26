@@ -18,7 +18,7 @@ export class HeaderIconCellTemplate implements CellTemplate<Cell | HeaderIconCel
     }
     render(cell: Compatible<HeaderIconCell>) {
         return (
-            <div className="flex gap-3 items-center focus:border-none">
+            <div className="flex gap-3 items-center grid-header">
                 <div>
                     {cell.icon}
                 </div>

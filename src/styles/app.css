@@ -1,3 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.cell-center {
+  @apply justify-center items-center !important;
+}
+.grid-id-column {
+  @apply cell-center;
+}
+.rg-headerIcon-cell {
+  @apply text-center !important;
+  @apply bg-gray-100;
+}
+.rg-switch-cell {
+  @apply cell-center;
+}
+.rg-add-cell {
+  @apply cell-center cursor-pointer;
+}
