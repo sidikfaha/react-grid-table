@@ -17,4 +17,5 @@
 }
 .rg-add-cell {
   @apply cell-center cursor-pointer;
+  @apply bg-green-50;
 }

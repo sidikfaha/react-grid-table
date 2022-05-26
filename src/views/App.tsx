@@ -22,10 +22,10 @@ export default function App() {
     height: 45,
     cells: [
       { type: "add", text: "", onClick: () => addItem() },
-      { type: "text", text: "" },
-      { type: "text", text: "" },
-      { type: "text", text: "" },
-      { type: "text", text: "" },
+      { type: "text", text: "", className: 'bg-green-50' },
+      { type: "text", text: "", className: 'bg-green-50' },
+      { type: "text", text: "", className: 'bg-green-50' },
+      { type: "text", text: "", className: 'bg-green-50' },
     ],
   };
   const [items, setItems] = useState<Item[]>([]);
