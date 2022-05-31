@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom/client';
 import "@silevis/reactgrid/styles.css";
-import './styles/app.css';
+import './styles/style.css';
 import App from './views/App';
 import reportWebVitals from './reportWebVitals';
 
